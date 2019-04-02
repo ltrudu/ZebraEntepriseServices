@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RESTPrintServiceActivity">
+    <Switch
+        android:id="@+id/startStopServiceSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Start Service"
+        android:textSize="24sp" />
+
+    <Switch
+        android:id="@+id/startOnBootSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startStopServiceSwitch"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Auto-start after reboot"
+        android:textSize="24sp" />
+
+    <Switch
+        android:id="@+id/allowExternalIPsSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startOnBootSwitch"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="External IPs blocked"
+        android:textSize="24sp" />
+
+
+    <TextView
+        android:id="@+id/tv_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/allowExternalIPsSwitch"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Device IP : 127.0.0.1"
+        android:textAlignment="textStart"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/btLicense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_below="@+id/tv_ip"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="License" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="103dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        app:srcCompat="@drawable/zebra" />
+
+</RelativeLayout>

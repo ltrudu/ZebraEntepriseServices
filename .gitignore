@@ -1,0 +1,13 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.idea/caches/build_file_checksums.ser
+.idea/caches/gradle_models.ser
+BrowserIntentURLServices/release/output.json
+BrowserIntentURLServices/release/BrowserIntentURLServices-release.apk
+PrintFromBrowserServices/release/BrowserIntentURLServices-release.apk
