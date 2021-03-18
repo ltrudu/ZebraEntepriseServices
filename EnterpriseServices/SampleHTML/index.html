@@ -13,20 +13,33 @@
 			}
 		h2 { 
 			height: auto;
-			width: fit-content;
+			width: auto;
 			margin: 10px 10px 0px 10px;
 			display: block;
 			color: #000000;
-			font: 400 25px Arial;
+			font: 400 28px Arial;
 			text-align: center;
 			}
+		.divtext {
+			height: auto;
+			width: auto;
+			margin: 10px 10px 0px 10px;
+			display: block;
+			color: #000000;
+			font: 400 14px Arial;
+		}
 		.printbuttonsC1 {
 			width: auto;
 			margin: 10px 10px 10px 10px; 
 			height: 50px;
 			font-size: 95%;
 			display: inline-flex;
-			font: 400 25px Arial;
+			font: 400 35px Arial;
+		}
+		.scaninput{
+		    height: 80px;
+			width: 380px;
+			font: 400 36px Arial;
 		}
 		.printHRef {
 			width: auto;
@@ -55,14 +68,11 @@
 	</style>
 	</head>
 	<body>
-	<h1>Print From Browser Service Playground</h1>
+	<h1>Enterprise Services Playground</h1>
 			<div class="pageBlock">
-				<h2>Print with Rest Web Service (recommended)</h2>
+				<h2>Print Rest Services</h2>
 				<hr class="separator"></hr>
 				<button onclick="connectToPrinterRestWsFetch();" class="printbuttonsC1">Connect Printer : Fetch</button>
-				<hr class="separator"></hr>
-				<button onclick="printZPLRestWsWindowOpen();" class="printbuttonsC1">Print ZPL: Window.Open</button>
-				<button onclick="printZPLRestWsWindowOpenBase64();" class="printbuttonsC1">Print ZPL (b64): Window.Open</button>
 				<hr class="separator"></hr>
 				<button onclick="printZPLRestWsXMLHttpRequest();" class="printbuttonsC1">Print ZPL: XMLHttpRequest</button>
 				<hr class="separator"></hr>
@@ -71,58 +81,59 @@
 				<hr class="separator"></hr>
 				<button onclick="linePrintRestWsFetchBase64();" class="printbuttonsC1">LinePrint(b64): Fetch</button>
 				<hr class="separator"></hr>
-				<button onclick="unselectPrinterRestWsXMLHttpRequest();" class="printbuttonsC1">UnselectPrinter: Fetch</button>
-				<hr class="separator"></hr>
-				<a href="http://"+ destIP + ":8080/?command=printzpl&template=^XA^FO10,10^ADN,300,70^FDTEST^FS^XZ"	class="printHRef">Print ZPL: REST WS: HRef</a>
+				<button onclick="unselectPrinterRestWsXMLHttpRequest();" class="printbuttonsC1">UnselectPrinter: XMLHttpRequest</button>
 			</div>
 			<div class="pageBlock">
-				<h2>Rest Web Service responses</h2>
+				<h2>Scan Rest Services</h2>
+				<hr class="separator"></hr>
+				<!--
+				<button onclick="setupScannerForKeyboardEmulationRestWsXMLHttpRequest();" class="printbuttonsC1">Setup Keyboard Emulation: XMLHttpRequest</button>
+				<div class="divtext">Input fields to test Keyboard Emulation</div>
+				<div class="divtext">A tab is automatically added after each scan</div>
+				<div class="divtext">to focus automatically on the next available input field</div>
+				<input type="text" class="scaninput"/>
+				<input type="text" class="scaninput"/>
+				<input type="text" class="scaninput"/>
+				<input type="text" class="scaninput"/>
+				<hr class="separator"></hr>
+				-->
+				<button onclick="setupScannerForRestWsXMLHttpRequest();" class="printbuttonsC1">Setup REST Scan: XMLHttpRequest</button>
+				<button onclick="startListeningToScans();" class="printbuttonsC1">Start listening to REST Scans: XMLHttpRequest</button>
+				<button onclick="stopListeningToScans();" class="printbuttonsC1">Stop listening to REST Scans: XMLHttpRequest</button>
+				<button onclick="enableScanner();" class="printbuttonsC1">Enable Scanner: XMLHttpRequest</button>
+				<button onclick="disableScanner();" class="printbuttonsC1">Disable Scanner: XMLHttpRequest</button>
+				<button onclick="startScan();" class="printbuttonsC1">Start Scan: XMLHttpRequest</button>
+				<button onclick="stopScan();" class="printbuttonsC1">Stop Scan: XMLHttpRequest</button>
+				<div class="divtext">Scan results using REST service :</div>
+				<div  class="divtext" id="scanresults">Symbology:
+				Data:</div>
+			</div>
+			<div class="pageBlock">
+				<h2>Responses</h2>
 				<hr class="separator"></hr>
 				<div class="pageBlock" id="RestWSResponse"></div>
 			</div>
-			<div class="pageBlock">
-				<h2>Print with Intent URLs (not recommended)</h2>
-				<hr class="separator"></hr>
-				<button onclick="printZPLIntentURLWindowOpen();" class="printbuttonsC1">Print ZPL: Intent URL: Window.Open</button>
-			</div>
 
 		<script>
-		var destIP = "localhost"; //"127.0.0.1"; // IP address of the device. This can be localhost or 127.0.0.1 if run locally.
+		var destIP = "localhost";//"127.0.0.1"; //"10.10.12.179";//"10.6.201.11";  // IP address of the device. This can be localhost or 127.0.0.1 if run locally.
 		// destIP can be set to a remote IP if you want to test your web page code from a desktop computer
 		// in that case, you must enable the "allow external ip" option of the service
 
 		var printerBTMac = "AC3FA4CE7931";
 		var printerWIFIMac = "AC3FA4CE7930";
+		
 
 		function connectToPrinterRestWsFetch()
 		{
-			fetch("http://"+ destIP + ":8080/?command=connect&bluetoothMAC=" + printerBTMac + "&wifiMAC=" + printerWIFIMac)
+			fetch("http://"+ destIP + ":8080/printconnect?command=connect&bluetoothMAC=" + printerBTMac + "&wifiMAC=" + printerWIFIMac)
 			.then(response => {	if(response.ok) return response.json();})
 			.then(json => document.getElementById("RestWSResponse").innerHTML = "<p>Status : " + json.result + "</p>\n<p>Message : " + json.message + "</p>\n");
 		}
 		
-		function printZPLIntentURLWindowOpen()
-		{
-			window.open("intent://printzpl/#Intent;scheme=plaintext;package=com.zebra.enterpriseservices;S.template=^XA^FO10,10^ADN,300,70^FDTEST^FS^XZ;S.verbose=true;end");
-		}
-		
-		function printZPLRestWsWindowOpen()
-		{
-			window.open("http://"+destIP + ":8080/?command=printzpl&template=^XA^FO10,10^ADN,300,70^FDTEST^FS^XZ");
-		}
-		
-		function printZPLRestWsWindowOpenBase64()
-		{
-			// Let's create a base 64 encoded template with some variable data: %OBJECT% and %ADJECTIVE%
-			var templateUTF8Base64 = base64.encode('^XA^FO10,10^ADA,150,40^FDTest ZPL^FS^XZ');
-			var uriEncodedTemplate = encodeURIComponent(templateUTF8Base64);
-			// Standard charset is optional here because UTF_8 is the default decoding char set.
-			window.open("http://"+ destIP + ":8080/?command=printzpl&encoding=base64encoded&standardCharsets=UTF_8&template="+uriEncodedTemplate);
-		}
 		
 		function printZPLRestWsFetch()
 		{
-			fetch("http://"+ destIP + ":8080/?command=printzpl&template=^XA^FO10,10^ADN,100,70^FDTEST^FS^XZ")
+			fetch("http://"+ destIP + ":8080/printconnect?command=printzpl&template=^XA^FO10,10^ADN,100,70^FDTEST^FS^XZ")
 			.then(response => {	if(response.ok) return response.json();})
 			.then(json => document.getElementById("RestWSResponse").innerHTML = "<p>Status : " + json.result + "</p>\n<p>Message : " + json.message + "</p>\n");
 		}
@@ -131,7 +142,7 @@
 		function linePrintRestWsFetchBase64()
 		{
 			var uriEncodedBase64EncodedLine = encodeURIComponent("//5UAGgAaQBzACAAaQBzACAAbQB5ACAAdABlAHgAdAANAAoAVABvACAAcAByAGkAbgB0AA0ACgBFAG4AYwBvAGQAZQBkACAAaQBuACAAYgBhAHMAZQA2ADQADQAKAFcAaQB0AGgAIABjAGEAcgByAGkAYQBnAGUAIAByAGUAdAB1AHIAbgBzAA0ACgANAAoA");
-			fetch("http://"+ destIP + ":8080/?command=printsingleline&encoding=base64encoded&standardCharsets=UTF_16&text="+uriEncodedBase64EncodedLine)
+			fetch("http://"+ destIP + ":8080/printconnect?command=printsingleline&encoding=base64encoded&standardCharsets=UTF_16&text="+uriEncodedBase64EncodedLine)
 			.then(response => {	if(response.ok) return response.json();})
 			.then(json => document.getElementById("RestWSResponse").innerHTML = "<p>Status : " + json.result + "</p>\n<p>Message : " + json.message + "</p>\n");
 		}
@@ -141,17 +152,12 @@
 		{
 			var xhr = new XMLHttpRequest();
 			var encodedCommand = encodeURIComponent("unselect");
-			xhr.open("GET", "http://"+ destIP + ":8080/?command="+ encodedCommand, true);
+			xhr.open("GET", "http://"+ destIP + ":8080/printconnect?command="+ encodedCommand, true);
 			xhr.onreadystatechange = function (oEvent) {  
 				if (xhr.readyState === XMLHttpRequest.DONE) {  
-					if (xhr.status === 200) {  
 					  console.log(xhr.responseText);
-					  document.getElementById("RestWSResponse").innerHTML = "<p>Success : " + xhr.responseText + "</p>\n";	
-					} else {  
-					   console.log("Error", xhr.statusText); 
-					   document.getElementById("RestWSResponse").innerHTML = "<p>Error : " + xhr.statusText + "</p>\n";					   
-					}  
-				}  
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+					} 			
 			}; 
 			xhr.send(null);
 		}
@@ -164,13 +170,13 @@
 			
 			// Fetch first print job
 			// Standard charset is optional here because UTF_8 is the default decoding char set.
-			fetch("http://"+ destIP + ":8080/?command=printzpl&encoding=base64encoded&standardCharsets=UTF_8&template="+templateUTF8Base64+"&variables="+variableUTF8Base64)
+			fetch("http://"+ destIP + ":8080/printconnect?command=printzpl&encoding=base64encoded&standardCharsets=UTF_8&template="+templateUTF8Base64+"&variables="+variableUTF8Base64)
 			.then(response => {	if(response.ok) return response.json();})
 			.then(json => document.getElementById("RestWSResponse").innerHTML = "<p>Status : " + json.result + "</p>\n<p>Message : " + json.message + "</p>\n");
 			
 			// Fetch a second print job
 			variableUTF8Base64 = base64.encode('%OBJECT%:The rain:%ADJECTIVE%:wet.');
-			fetch("http://"+ destIP + ":8080/?command=printzpl&encoding=base64encoded&standardCharsets=UTF_8&template="+templateUTF8Base64+"&variables="+variableUTF8Base64)
+			fetch("http://"+ destIP + ":8080/printconnect?command=printzpl&encoding=base64encoded&standardCharsets=UTF_8&template="+templateUTF8Base64+"&variables="+variableUTF8Base64)
 			.then(response => {	if(response.ok) return response.json();})
 			.then(json => document.getElementById("RestWSResponse").innerHTML = "<p>Status : " + json.result + "</p>\n<p>Message : " + json.message + "</p>\n");			
 		}
@@ -180,20 +186,163 @@
 			var xhr = new XMLHttpRequest();
 			var encodedCommand = encodeURIComponent("printzpl");
 			var encodedTemplate = encodeURIComponent("^XA^FO10,10^ADN,300,70^FDTEST^FS^XZ");
-			xhr.open("GET", "http://"+ destIP + ":8080/?command="+ encodedCommand + "&template="+encodedTemplate, true);
+			xhr.open("GET", "http://"+ destIP + ":8080/printconnect?command="+ encodedCommand + "&template="+encodedTemplate, true);
 			xhr.onreadystatechange = function (oEvent) {  
 				if (xhr.readyState === XMLHttpRequest.DONE) {  
-					if (xhr.status === 200) {  
 					  console.log(xhr.responseText);
-					  document.getElementById("RestWSResponse").innerHTML = "<p>Success : " + xhr.responseText + "</p>\n";	
-					} else {  
-					   console.log("Error", xhr.statusText); 
-					   document.getElementById("RestWSResponse").innerHTML = "<p>Error : " + xhr.statusText + "</p>\n";					   
-					}  
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
 				}  
 			}; 
 			xhr.send(null);
 		}
+		
+		
+		/*
+		function setupScannerForKeyboardEmulationRestWsXMLHttpRequest()
+		{
+			// This will setup the scanner in keyboard emulation mode for the Chrome Browser
+			// The tab character will be automatically added at the end of the scan data to
+			// demonstrate an usage of the basic data formatting module
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=setup";
+			xhr.open("POST", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				}  
+			}; 
+			var configuration = JSON.stringify({"BasicDataFormatting":{"bdf_enabled":true,"bdf_output_plugin":"KEYSTROKE","bdf_prefix":null,"bdf_send_data":true,"bdf_send_tab":true},"IntentPlugin":{"intent_output_enabled":false},"KeystrokePlugin":{"keystroke_output_enabled":true},"ScannerPlugin":{"Decoders":{},"DecodersParams":{},"MarginLess":{},"MultiBarcode":{},"ReaderParams":{},"ScanParams":{},"UpcEan":{},"scanner_input_enabled":true,"scanner_selection":"auto","scanner_selection_by_identifier":"AUTO"},"mEnableTimeOutMechanism":true,"mProfileName":"com.android.chrome","mTimeOutMS":30000});
+			xhr.send(configuration);
+		}
+		*/
+		
+		function setupScannerForRestWsXMLHttpRequest()
+		{
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=setup";
+			xhr.open("POST", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				}  
+			}; 
+			var configuration = JSON.stringify({"MainBundle":{"APP_LIST":{"com.android.chrome":null}},"BasicDataFormatting":{},"IntentPlugin":{},"KeystrokePlugin":{},"ScannerPlugin":{"Decoders":{"decoder_aztec":true,"decoder_code128":true,"decoder_ean13":true},"DecodersParams":{},"MarginLess":{},"MultiBarcode":{},"ReaderParams":{},"ScanParams":{},"UpcEan":{},"scanner_selection_by_identifier":"AUTO"}});
+			xhr.send(configuration);
+		}
+		
+		var shouldContinueListening = true;
+		
+		function startListeningToScans()
+		{
+			shouldContinueListening = true;
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=waitscan&timeout=15000";
+			xhr.open("GET", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+					  if(shouldContinueListening == true)
+						startListeningToScans();
+				}  
+			}; 
+			xhr.send(null);
+		}
+		
+		function stopListeningToScans()   
+		{
+			shouldContinueListening = false;
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=stopwaitingscan";
+			xhr.open("GET", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				}  
+			}; 
+			xhr.send(null);
+		}
+		
+		function enableScanner()          
+		{
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=enable";
+			xhr.open("GET", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				}  
+			}; 
+			xhr.send(null);
+		}
+		
+		function disableScanner()         
+		{
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=disable";
+			xhr.open("GET", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				}  
+			}; 
+			xhr.send(null);
+		}
+		
+		function startScan()              
+		{
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=start";
+			xhr.open("GET", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				}  
+			}; 
+			xhr.send(null);
+		}
+		
+		function stopScan()               
+		{
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=stop";
+			xhr.open("GET", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				}  
+			}; 
+			xhr.send(null);
+		}
+		
+		function initializeScanner()
+		{
+			//setupScannerForRestWsXMLHttpRequest() then start listening to scans
+			var xhr = new XMLHttpRequest();
+			var url = "http://"+ destIP + ":8080/datawedge?command=setup";
+			xhr.open("POST", url);
+						xhr.onreadystatechange = function (oEvent) {  
+				if (xhr.readyState === XMLHttpRequest.DONE) {  
+					  console.log(xhr.responseText);
+					  startListeningToScans();
+				}  
+			}; 
+			var configuration = JSON.stringify({"MainBundle":{"APP_LIST":{"com.android.chrome":null}},"BasicDataFormatting":{},"IntentPlugin":{},"KeystrokePlugin":{},"ScannerPlugin":{"Decoders":{"decoder_aztec":true,"decoder_code128":true,"decoder_ean13":true},"DecodersParams":{},"MarginLess":{},"MultiBarcode":{},"ReaderParams":{},"ScanParams":{},"UpcEan":{},"scanner_selection_by_identifier":"AUTO"}});
+			xhr.send(configuration);
+		}
+		
+		/**
+		Static methods		
+		**/
+		initializeScanner();
+		
 		
 		/****************************************************************/
 		/* Base 64 Helper : Encode UTF_8 Strings in base64 format       */

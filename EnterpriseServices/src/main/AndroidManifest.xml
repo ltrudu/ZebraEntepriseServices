@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,65 +18,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.zebra.enterpriseservices.LicenceActivity"></activity>
-        <activity android:name="com.zebra.enterpriseservices.RESTPrintServiceActivity">
+        <activity android:name="com.zebra.enterpriseservices.RESTHostServiceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <service
-            android:name="com.zebra.enterpriseservices.RESTPrintService"
+            android:name="com.zebra.enterpriseservices.RESTHostService"
             android:enabled="true"
             android:exported="true" />
-        <activity
-            android:name="com.zebra.browserintenturl.UrlPrintActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="printzpl"
-                    android:path="/"
-                    android:scheme="plaintext" />
-                <data
-                    android:host="printzpl"
-                    android:path="/"
-                    android:scheme="base64encoded" />
-                <data
-                    android:host="printtemplatefile"
-                    android:path="/"
-                    android:scheme="plaintext" />
-                <data
-                    android:host="printtemplatefile"
-                    android:path="/"
-                    android:scheme="base64encoded" />
-                <data
-                    android:host="printsingleline"
-                    android:path="/"
-                    android:scheme="plaintext" />
-                <data
-                    android:host="printsingleline"
-                    android:path="/"
-                    android:scheme="base64encoded" />
-                <data
-                    android:host="passthrough"
-                    android:path="/"
-                    android:scheme="plaintext" />
-                <data
-                    android:host="passthrough"
-                    android:path="/"
-                    android:scheme="base64encoded" />
-                <data
-                    android:host="unselect"
-                    android:path="/"
-                    android:scheme="plaintext" />
-            </intent-filter>
-        </activity>
         <receiver
-            android:name="com.zebra.enterpriseservices.RESTPrintServiceBroadcastReceiverBootCompleted"
+            android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverBootCompleted"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
@@ -84,28 +40,28 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.zebra.enterpriseservices.RESTPrintServiceBroadcastReceiverStart"
+            android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverStart"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.zebra.printfrombrowserservices.startservice" />
+                <action android:name="com.zebra.enterpriseservices.startservice" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.zebra.enterpriseservices.RESTPrintServiceBroadcastReceiverStop"
+            android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverStop"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.zebra.printfrombrowserservices.stopservice" />
+                <action android:name="com.zebra.enterpriseservices.stopservice" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.zebra.enterpriseservices.RESTPrintServiceBroadcastReceiverSetup"
+            android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverSetup"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.zebra.printfrombrowserservices.setupservice" />
+                <action android:name="com.zebra.enterpriseservices.setupservice" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

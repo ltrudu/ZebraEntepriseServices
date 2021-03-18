@@ -1,17 +1,17 @@
 <resources>
     <string name="app_name">Enterprise Services</string>
-    <string name="zebra_print_server_notification_title">ZebraPrintServer</string>
-    <string name="zebra_print_server_notification_text">A local server that allows to send print jobs from any browser or app through a REST API</string>
-    <string name="zebra_print_server_notification_tickle">ZebraPrintServer</string>
+    <string name="zebra_enterprise_services_notification_title">Zebra Enterprise Services</string>
+    <string name="zebra_enterprise_services_notification_text">A local server that allows to scan and send print jobs from any browser or app through a REST API</string>
+    <string name="zebra_enterprise_services_notification_tickle">ZebraEnterpriseServices</string>
     <string name="serviceStopped">Service is stopped</string>
     <string name="serviceStarted">Service is running</string>
     <string name="startOnBoot">Start on boot</string>
     <string name="doNothingOnBoot">Do nothing on boot</string>
     <string name="allowexteralip">Allow external IPs</string>
     <string name="blockexternalip">Block external IPs</string>
-    <string name="zebra_print_server_channel_name">Zebra Print Service</string>
-    <string name="zebra_print_server_channel_id">Zebra Print Service channel</string>
-    <string name="zebra_print_server_appdescription"></string>
+    <string name="zebra_enterprise_services_channel_name">Zebra Enterprise Services</string>
+    <string name="zebra_enterprise_services_channel_id">Zebra Enterprise Services channel</string>
+    <string name="zebra_enterprise_services_appdescription"></string>
     <string name="restconfigactivitytitle">REST Print Service</string>
     <string name="iptextviewprefix">Device IP: </string>
 </resources>
