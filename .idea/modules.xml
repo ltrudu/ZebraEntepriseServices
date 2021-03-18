@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EnterpriseServices/EnterpriseServices.iml" filepath="$PROJECT_DIR$/EnterpriseServices/EnterpriseServices.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ZebraEnterpriseServices.iml" filepath="$PROJECT_DIR$/ZebraEnterpriseServices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ZebraEnterpriseServices.iml" filepath="$PROJECT_DIR$/.idea/modules/ZebraEnterpriseServices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.iml" filepath="$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.iml" filepath="$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.iml" />
     </modules>
   </component>
 </project>
