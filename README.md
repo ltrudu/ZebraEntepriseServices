@@ -1,6 +1,6 @@
 # ZEBRA ENTERPRISE SERVICES
 
-The Zebra Enterprise Services expose industrial functionalities to any Android Web Browser : 
+The Zebra Enterprise Services expose industrial functionalities to any Android Web Browser or applications using REST APIs or Intent URLs : 
  - Scanning using Datawedge
  - Printing using PrintConnect
 
