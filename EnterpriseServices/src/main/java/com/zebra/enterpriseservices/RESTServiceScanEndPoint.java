@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 
 import fi.iki.elonen.NanoHTTPD;
 
@@ -56,6 +57,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
     public RESTServiceScanEndPoint(Context aContext)
     {
         mContext = aContext;
+        Executors.newSingleThreadExecutor();
     }
 
 
@@ -89,7 +91,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         return new Pair<>(RESTServiceWebServer.EJobStatus.FAILED, "Datawedge error: Unsupported command : " + command);
     }
 
-    private Pair<RESTServiceWebServer.EJobStatus, String> setupprofile(NanoHTTPD.IHTTPSession session) {
+    protected Pair<RESTServiceWebServer.EJobStatus, String> setupprofile(NanoHTTPD.IHTTPSession session) {
         // Retrieve the data that have been posted (i.e. json configuration)
         Map<String, String> files = null;
         NanoHTTPD.Method method = session.getMethod();
@@ -170,7 +172,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         return setupDWProfile(settings);
     }
 
-    private Pair<RESTServiceWebServer.EJobStatus, String> waitscan(Map<String, List<String>> paramsList) {
+    protected Pair<RESTServiceWebServer.EJobStatus, String> waitscan(Map<String, List<String>> paramsList) {
         if(mScanJobLatch != null)
         {
             return new Pair<>(RESTServiceWebServer.EJobStatus.FAILED, "DataWedge Service: Error, a scanning job is already running in background. Please wait for it to finish or timeout. Or use the stopwaitingscan REST command to stop it.");
@@ -200,6 +202,10 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         }
 
         mScanJobLatch = new CountDownLatch(1);
+
+        mScannedData = "";
+        mScannedDataSource = "";
+        mScannedDataSymbology = "";
 
         if(mScanReceiver == null)
         {
@@ -267,8 +273,13 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
                 mScanReceiver.stopReceive();
                 mScanReceiver = null;
             }
-            String responseJSON = "{\n \"source\": \""+mScannedDataSource+"\",\n \"data\":\"" + mScannedData + "\",\n \"symbology\":\"" + mScannedDataSymbology + "\"\n}";
-            return new Pair<>(RESTServiceWebServer.EJobStatus.CUSTOM, responseJSON);
+
+            if(mScannedData != "") {
+                String responseJSON = "{\n \"source\": \"" + mScannedDataSource + "\",\n \"data\":\"" + mScannedData + "\",\n \"symbology\":\"" + mScannedDataSymbology + "\"\n}";
+                return new Pair<>(RESTServiceWebServer.EJobStatus.CUSTOM, responseJSON);
+            }
+            else
+                return new Pair<>(RESTServiceWebServer.EJobStatus.CUSTOM, "");
         } catch (InterruptedException e) {
             if(mScanJobLatch != null)
             {
@@ -309,7 +320,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         }
     }
 
-    private Pair<RESTServiceWebServer.EJobStatus, String> setupDWProfile(final DWProfileSetConfigSettings settings) {
+    protected Pair<RESTServiceWebServer.EJobStatus, String> setupDWProfile(final DWProfileSetConfigSettings settings) {
         if(mJobDoneLatch != null)
         {
             return new Pair<>(RESTServiceWebServer.EJobStatus.FAILED, "DataWedge Service: Error, a job is already running in background. Please wait for it to finish or timeout.");
@@ -395,7 +406,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         }
     }
 
-    private Pair<RESTServiceWebServer.EJobStatus, String> enablePlugin()
+    protected Pair<RESTServiceWebServer.EJobStatus, String> enablePlugin()
     {
         if(mJobDoneLatch != null)
         {
@@ -457,7 +468,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         }
     }
 
-    private Pair<RESTServiceWebServer.EJobStatus, String> disablePlugin()
+    protected Pair<RESTServiceWebServer.EJobStatus, String> disablePlugin()
     {
         if(mJobDoneLatch != null)
         {
@@ -519,9 +530,9 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         }
     }
 
-    private Pair<RESTServiceWebServer.EJobStatus, String> startScan()
+    protected Pair<RESTServiceWebServer.EJobStatus, String> startScan()
     {
-        if(mJobDoneLatch != null)
+         if(mJobDoneLatch != null)
         {
             return new Pair<>(RESTServiceWebServer.EJobStatus.FAILED, "Start Scan: Error, a job is already running in background. Please wait for it to finish or timeout.");
         }
@@ -582,7 +593,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         }
     }
 
-    private Pair<RESTServiceWebServer.EJobStatus, String> stopScan()
+    protected Pair<RESTServiceWebServer.EJobStatus, String> stopScan()
     {
         if(mJobDoneLatch != null)
         {

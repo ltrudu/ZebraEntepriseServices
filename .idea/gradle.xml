@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/EnterpriseServices" />
+            <option value="$PROJECT_DIR$/PrintConnectIntentsWrapper" />
             <option value="$PROJECT_DIR$/datawedgeprofileintentswrapper" />
           </set>
         </option>

@@ -16,6 +16,7 @@ public class RESTServiceWebServer extends NanoHTTPD {
     private Context mContext = null;
     private RESTHostServiceWifiStateObserver mIPChangeObserver = null;
     private String mCurrentIP = "";
+    private boolean mStopServing = false;
 
     protected enum EJobStatus
     {
@@ -48,16 +49,21 @@ public class RESTServiceWebServer extends NanoHTTPD {
             mIPChangeObserver = new RESTHostServiceWifiStateObserver(mContext, new RESTHostServiceWifiStateObserver.IIPChangeObserver() {
                 @Override
                 public void onIPChanged(String newIP) {
+                    if(newIP.equalsIgnoreCase("0.0.0.0"))
+                    {
+                        // This means we are actually getting a new IP but the IP resolution is not finished
+                        // We block any request from the webpage
+                        mStopServing = true;
+                        mCurrentIP = "0.0.0.0";
+                    }
                     if(newIP.equalsIgnoreCase("0.0.0.0") == false && newIP.equalsIgnoreCase(mCurrentIP) == false) {
-                        // If the IP has changed, we need to restart the server
-                        RESTServiceWebServer.this.stop();
+                        // If the IP has changed, we need to restart the server and unstop the service if necessary
+                        mStopServing = true;
                         try {
                             mCurrentIP = newIP;
-                            Thread.sleep(2000);
-                            RESTServiceWebServer.this.start();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
+                            //Thread.sleep(2000);
+                            mStopServing = false;
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -69,12 +75,12 @@ public class RESTServiceWebServer extends NanoHTTPD {
         {
             mIPChangeObserver.startObserver();
         }
-
+        mStopServing = false;
     }
 
     @Override
     public void stop() {
-        mScanEndPoint.stopwaitingscan(); // stop any remaining scans
+        mStopServing = true;
         if(mIPChangeObserver != null && mIPChangeObserver.isStarted())
         {
             mIPChangeObserver.stopObserver();
@@ -86,6 +92,16 @@ public class RESTServiceWebServer extends NanoHTTPD {
     @Override
     public Response serve(IHTTPSession session) {
         String responseJSON = "";
+        if(mStopServing)
+        {
+            // We are stopped, so we don't accept any requests from the webpage, and return an empty json string
+            // Something happen and we did something, so the response will allways be OK from the serve method perspective
+            // Other kind of responses (timeout, etc...) are managed by the REST server itself.
+            Response resp =  newFixedLengthResponse(Response.Status.OK, "application/json", responseJSON);
+            // We need to add CORS header to the response to allow Cross Origin Resource Sharing
+            resp = addCORSHeaders(session.getHeaders(), resp, "*");
+            return resp;
+        }
         // Check if the remote IP is equal to the device IP
         if(session.getRemoteHostName().equalsIgnoreCase("localhost") == false && session.getRemoteIpAddress().equalsIgnoreCase("127.0.0.1") == false && mAllowExternalIPs == false && session.getRemoteIpAddress().equalsIgnoreCase(mIPChangeObserver.getIPAddress()) == false)
         {

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ZebraEnterpriseServices.iml" filepath="$PROJECT_DIR$/.idea/modules/ZebraEnterpriseServices.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.iml" filepath="$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.iml" filepath="$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PrintConnectIntentsWrapper/ZebraEnterpriseServices.printconnectintentswrapper.iml" filepath="$PROJECT_DIR$/.idea/modules/PrintConnectIntentsWrapper/ZebraEnterpriseServices.printconnectintentswrapper.iml" />
     </modules>
   </component>
 </project>
