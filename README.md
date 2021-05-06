@@ -1,3 +1,33 @@
+# ZEBRA ENTERPRISE SERVICES
+
+The Zebra Enterprise Services expose industrial functionalities to any Android Web Browser : 
+ - Scanning using Datawedge
+ - Printing using PrintConnect
+
+The whole documentation can be found here:
+https://github.com/ltrudu/ZebraEntepriseServices/blob/master/ZebraEnterpriseServices-HowTo.docx
+
+The first implementation of the Services implements the PrintConnect API, this allows to connect, disconnect and send print jobs to any Zebra LinkOS Printer.
+The printing API has been implemented using two different entry points:
+-	A local REST Web Service
+It allows any Android browser to send REST commands using standard Web methods, and retrieve the result in a JSON format response.
+
+-	An implementation of the Chrome Intent URL Schemes.
+The Chrome Intent implementation allows any Android browser to send print commands using the intent:// URL Scheme.
+The results are displayed using Android native Toasts windows (small popup window that appears on top of any application for a user defined duration, then disappears)
+To enable Chrome Intent protocol, the Zebra Enterprise Services (ZES) will register a new URL commands to the intent:// scheme.
+Each command will allow the user to do specific actions.
+Both implementations can be addressed using standard Web methods.
+They rely on Zebra’s PrintConnect Driver to ensure the communication with the Printer.
+Thanks to PrintConnect and ZES, any Android browser can communicate with any LinkOS Zebra’s Printer through Bluetooth, Wifi, Ethernet.
+More information about PrintConnect can be found on the Zebra’s Website:
+https://www.zebra.com/us/en/products/software/barcode-printers/link-os/print-connect.html
+
+All the commands of Browser Intent URL Service derive from the PrintConnect Intent API.
+For more information, refer to the PrintConnect documentation (in the Intents section you'll find a description of the methods implemented by the BIUS/RESTWs):
+https://www.zebra.com/content/dam/zebra_new_ia/en-us/solutions-verticals/product/Software/Printer%20Software/Link-OS/print-connect/PC-UserGuide-P1082444-001.pdf
+
+
 # END USER LICENSE AGREEMENT (UNRESTRICTED SOFTWARE)
 
 
