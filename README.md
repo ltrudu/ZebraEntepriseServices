@@ -1,11 +1,10 @@
 # ZEBRA ENTERPRISE SERVICES
 
-<<<<<<< HEAD
 The Zebra Enterprise Services expose industrial functionalities through a local Webserver to any Android Web Browser or applications using REST APIs or Intent URLs : 
 =======
 The Zebra Enterprise Services expose industrial functionalities to any Android Web Browser (Chrome, Firefox, Opera...) or applications using REST APIs or Intent URLs : 
->>>>>>> 8a53bfa9d216dbb9d17ed93e59a147af5d9243fa
- - Scanning using Datawedge
+
+- Scanning using Datawedge
  - Printing using PrintConnect
 
 The whole documentation can be found here:
