@@ -11,11 +11,11 @@ The latest release can be found here:
 
 https://github.com/ZebraDevs/ZebraEntepriseServices/releases
 
-The whole documentation can be found here:
+The documentation can be found here:
 
 https://github.com/ltrudu/ZebraEntepriseServices/blob/master/ZebraEnterpriseServices-HowTo.docx
 
-An HTML Sample (index.html) and some DataWedge configurations samples can be found here:
+A HTML Sample (index.html) and some DataWedge configurations samples can be found here:
 
 https://github.com/ZebraDevs/ZebraEntepriseServices/tree/master/EnterpriseServices/SampleHTML
 
