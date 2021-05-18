@@ -13,7 +13,7 @@ https://github.com/ZebraDevs/ZebraEntepriseServices/releases
 The whole documentation can be found here:
 https://github.com/ltrudu/ZebraEntepriseServices/blob/master/ZebraEnterpriseServices-HowTo.docx
 
-An HTML Sample can be found here:
+An HTML Sample (index.html) and some DataWedge configurations samples can be found here:
 https://github.com/ZebraDevs/ZebraEntepriseServices/tree/master/EnterpriseServices/SampleHTML
 
 If you want to test, simply install the latest apk from the release page and open the index.html file found in the SampleHTML folder on any webbrowser running on your Android device.
