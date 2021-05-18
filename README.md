@@ -7,8 +7,21 @@ The Zebra Enterprise Services expose industrial functionalities to any Android W
 - Scanning using Datawedge
  - Printing using PrintConnect
 
+The latest release can be found here:
+https://github.com/ZebraDevs/ZebraEntepriseServices/releases
+
 The whole documentation can be found here:
 https://github.com/ltrudu/ZebraEntepriseServices/blob/master/ZebraEnterpriseServices-HowTo.docx
+
+An HTML Sample can be found here:
+https://github.com/ZebraDevs/ZebraEntepriseServices/tree/master/EnterpriseServices/SampleHTML
+
+If you want to test, simply install the latest apk from the release page and open the index.html file found in the SampleHTML folder on any webbrowser running on your Android device.
+
+Printing capability is available on any android device using PrintConnect:
+https://play.google.com/store/apps/details?id=com.zebra.printconnect
+
+Scanning capability is available on Zebra Devices only starting with Marshmallow (latest BSP + LG Patch). 
 
 The first implementation of the Services implements the PrintConnect API, this allows to connect, disconnect and send print jobs to any Zebra LinkOS Printer.
 The printing API has been implemented using two different entry points:
