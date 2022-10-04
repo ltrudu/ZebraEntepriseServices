@@ -10,6 +10,11 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
+    <queries>
+        <package android:name="com.zebra.printconnect" />
+        <package android:name="com.symbol.datawedge" />
+    </queries>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,7 +23,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.zebra.enterpriseservices.LicenceActivity"></activity>
-        <activity android:name="com.zebra.enterpriseservices.RESTHostServiceActivity">
+        <activity android:name="com.zebra.enterpriseservices.RESTHostServiceActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,7 +38,8 @@
         <receiver
             android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverBootCompleted"
             android:enabled="true"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -41,7 +48,8 @@
         </receiver>
         <receiver
             android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverStart"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.zebra.enterpriseservices.startservice" />
 
@@ -50,7 +58,8 @@
         </receiver>
         <receiver
             android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverStop"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.zebra.enterpriseservices.stopservice" />
 
@@ -59,7 +68,8 @@
         </receiver>
         <receiver
             android:name="com.zebra.enterpriseservices.RESTHostServiceBroadcastReceiverSetup"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.zebra.enterpriseservices.setupservice" />
 

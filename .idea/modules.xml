@@ -4,8 +4,17 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ZebraEnterpriseServices.iml" filepath="$PROJECT_DIR$/.idea/modules/ZebraEnterpriseServices.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.iml" filepath="$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.main.iml" filepath="$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/EnterpriseServices/ZebraEnterpriseServices.EnterpriseServices.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.iml" filepath="$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/datawedgeprofileintentswrapper/ZebraEnterpriseServices.datawedgeprofileintentswrapper.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PrintConnectIntentsWrapper/ZebraEnterpriseServices.printconnectintentswrapper.iml" filepath="$PROJECT_DIR$/.idea/modules/PrintConnectIntentsWrapper/ZebraEnterpriseServices.printconnectintentswrapper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/printconnectintentswrapper/ZebraEnterpriseServices.printconnectintentswrapper.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/printconnectintentswrapper/ZebraEnterpriseServices.printconnectintentswrapper.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/printconnectintentswrapper/ZebraEnterpriseServices.printconnectintentswrapper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/printconnectintentswrapper/ZebraEnterpriseServices.printconnectintentswrapper.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/printconnectintentswrapper/ZebraEnterpriseServices.printconnectintentswrapper.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/printconnectintentswrapper/ZebraEnterpriseServices.printconnectintentswrapper.unitTest.iml" />
     </modules>
   </component>
 </project>

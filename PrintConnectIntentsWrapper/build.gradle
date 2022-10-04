@@ -1,4 +1,6 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+}
 
 ext {
     PUBLISH_GROUP_ID = 'com.zebra.printconnectintentswrapper'
@@ -7,11 +9,11 @@ ext {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 32
         versionCode 1
         versionName "1.2"
 
@@ -35,99 +37,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-}
-
-def jarName = 'datawedgeprofileintents.jar'
-
-task clearJarRelease(type: Delete) {
-    delete "${project.buildDir}/outputs/jar/release/" + jarName
-}
-
-task clearJarDebug(type: Delete) {
-    delete "${project.buildDir}/outputs/jar/debug/" + jarName
-}
-
-task makeJarRelease(type: Copy) {
-    from("${project.buildDir}/intermediates/intermediate-jars/release/")
-    into("${project.buildDir}/outputs/jar/release")
-    include('classes.jar')
-    rename('classes.jar', jarName)
-}
-
-task makeJarDebug(type: Copy) {
-    from("${project.buildDir}/intermediates/intermediate-jars/debug/")
-    into("${project.buildDir}/outputs/jar/debug")
-    include('classes.jar')
-    rename('classes.jar', jarName)
-}
-
-task makeAllJar(type: Copy) {}
-
-makeJarRelease.dependsOn(clearJarRelease, build)
-makeJarDebug.dependsOn(clearJarDebug, build)
-
-makeAllJar.dependsOn(makeJarDebug,makeJarRelease)
-
-/*
-Publish tasks
-https://medium.com/@daniellevass/how-to-publish-your-android-studio-library-to-jcenter-5384172c4739
-https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle
- */
-
-// ./gradlew clean build generateRelease
-apply plugin: 'maven'
-
-def groupId = project.PUBLISH_GROUP_ID
-def artifactId = project.PUBLISH_ARTIFACT_ID
-def version = project.PUBLISH_VERSION
-
-def localReleaseDest = "${buildDir}/release/${version}"
-
-task androidJavadocs(type: Javadoc) {
-    failOnError = false
-    source = android.sourceSets.main.java.srcDirs
-    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-    classpath += files(ext.androidJar)
-}
-
-task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
-    from androidJavadocs.destinationDir
-}
-
-task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.srcDirs
-}
-
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.groupId = groupId
-        pom.artifactId = artifactId
-        pom.version = version
-        // Add other pom properties here if you want (developer details / licenses)
-        repository(url: "file://${localReleaseDest}")
-    }
-}
-
-task zipRelease(type: Zip) {
-    from localReleaseDest
-    destinationDir buildDir
-    archiveName "release-${version}.zip"
-}
-
-task generateRelease {
-    doLast {
-        println "Release ${version} can be found at ${localReleaseDest}/"
-        println "Release ${version} zipped can be found ${buildDir}/release-${version}.zip"
-    }
-}
-
-generateRelease.dependsOn(uploadArchives)
-generateRelease.dependsOn(zipRelease)
-
-
-artifacts {
-    archives androidSourcesJar
-    archives androidJavadocsJar
 }
