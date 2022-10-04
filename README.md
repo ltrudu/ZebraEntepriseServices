@@ -1,5 +1,7 @@
 # ZEBRA ENTERPRISE SERVICES
 
+!!! Updated to work on Android 12 !!!
+
 The Zebra Enterprise Services expose industrial functionalities through a local Webserver to any Android Web Browser or applications using REST APIs or Intent URLs : 
 =======
 The Zebra Enterprise Services expose industrial functionalities to any Android Web Browser (Chrome, Firefox, Opera...) or applications using REST APIs or Intent URLs : 
