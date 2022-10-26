@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.zebra.enterpriseservices"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 32
         versionCode 4
         versionName "1.3"

@@ -11,10 +11,10 @@ public class RESTHostServiceBroadcastReceiverBootCompleted extends BroadcastRece
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        Log.d(RESTHostServiceConstants.TAG, "RESTHostServiceBroadcastReceiverBootCompleted::onReceive");
+        LogHelper.logD( "RESTHostServiceBroadcastReceiverBootCompleted::onReceive");
         SharedPreferences sharedpreferences = context.getSharedPreferences(RESTHostServiceConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         boolean startService = sharedpreferences.getBoolean(RESTHostServiceConstants.SHARED_PREFERENCES_START_SERVICE_ON_BOOT, false);
-        Log.d(RESTHostServiceConstants.TAG, startService ? "Auto start service" : "Do nothing on boot");
+        LogHelper.logD(startService ? "Auto start service" : "Do nothing on boot");
         if(startService)
         {
             RESTHostService.startService(context);

@@ -38,28 +38,28 @@ public class RESTHostService extends Service {
 
     public void onCreate()
     {
-        logD("onCreate");
+        LogHelper.logD("RESTHostService::onCreate");
         this.mNotificationManager = ((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE));
         startService();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        logD("onStartCommand");
+        LogHelper.logD("RESTHostService::onStartCommand");
         super.onStartCommand(intent, flags, startId);
         return Service.START_STICKY;
     }
 
     public void onDestroy()
     {
-        logD("onDestroy");
+        LogHelper.logD("RESTHostService::onDestroy");
         stopService();
     }
 
     @SuppressLint({"Wakelock"})
     private void startService()
     {
-        logD("startService");
+        LogHelper.logD("RESTHostService::startService");
         try
         {
             Intent mainActivityIntent = new Intent(this, RESTHostServiceActivity.class);
@@ -88,6 +88,7 @@ public class RESTHostService extends Service {
             localTaskStackBuilder.addNextIntent(mainActivityIntent);
             notificationBuilder.setContentIntent(localTaskStackBuilder.getPendingIntent(0, FLAG_UPDATE_CURRENT));
 
+            LogHelper.logD("RESTHostService::startService::startForeground");
             // Start foreground service
             startForeground(SERVICE_ID, mNotification);
 
@@ -99,14 +100,16 @@ public class RESTHostService extends Service {
                 mRESTServer = null;
             }
 
+            LogHelper.logD("RESTHostService::startService::start REST Server");
             mRESTServer = new RESTServiceWebServer(PRINT_SERVER_PORT, getBaseContext());
             mRESTServer.start();
-            
-            logD("startService:Service started without error.");
+
+            LogHelper.logD("RESTHostService::startService:Service started without error.");
         }
         catch(Exception e)
         {
-            logD("startService:Error while starting service.");
+            LogHelper.logD("RESTHostService::startService:Error while starting service.");
+            LogHelper.logD(e.getMessage());
             e.printStackTrace();
         }
 
@@ -117,7 +120,7 @@ public class RESTHostService extends Service {
     {
         try
         {
-            logD("stopService.");
+            LogHelper.logD("RESTHostService::stopService.");
 
             // Release web server here
             if(mRESTServer != null)
@@ -128,11 +131,12 @@ public class RESTHostService extends Service {
             }
             
             stopForeground(true);
-            logD("stopService:Service stopped without error.");
+            LogHelper.logD("RESTHostService::stopService:Service stopped without error.");
         }
         catch(Exception e)
         {
-            logD("Error while stopping service.");
+            LogHelper.logD("RESTHostService::Error while stopping service.");
+            LogHelper.logD(e.getMessage());
             e.printStackTrace();
 
         }
@@ -149,16 +153,13 @@ public class RESTHostService extends Service {
         return getString(R.string.zebra_enterprise_services_channel_id);
     }
 
-    private void logD(String message)
-    {
-        Log.d(RESTHostServiceConstants.TAG, message);
-    }
-
     public static void startService(Context context)
     {
         Intent myIntent = new Intent(context, RESTHostService.class);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
+            LogHelper.logD("RESTHostService::startService Starting for build >= Android O.");
+
             // Use start foreground service to prevent the runtime error:
             // "not allowed to start service intent app is in background"
             // to happen when running on OS >= Oreo
@@ -166,12 +167,14 @@ public class RESTHostService extends Service {
         }
         else
         {
+            LogHelper.logD("RESTHostService::startService Starting for build < Android O.");
             context.startService(myIntent);
         }
     }
 
     public static void stopService(Context context)
     {
+        LogHelper.logD("RESTHostService::stopService Stopping service");
         Intent myIntent = new Intent(context, RESTHostService.class);
         context.stopService(myIntent);
     }

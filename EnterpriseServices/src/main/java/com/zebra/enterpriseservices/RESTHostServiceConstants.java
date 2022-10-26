@@ -1,8 +1,6 @@
 package com.zebra.enterpriseservices;
 
 public class RESTHostServiceConstants {
-    protected static final String TAG  ="RESTHostService";
-
     // Shared preference keys
     protected static final String SHARED_PREFERENCES_NAME = "RESTHostService";
     protected static final String SHARED_PREFERENCES_START_SERVICE_ON_BOOT = "startonboot";

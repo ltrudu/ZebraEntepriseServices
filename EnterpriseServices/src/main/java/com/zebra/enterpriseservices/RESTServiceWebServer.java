@@ -20,10 +20,24 @@ public class RESTServiceWebServer extends NanoHTTPD {
 
     protected enum EJobStatus
     {
-        SUCCEEDED,
-        FAILED,
-        TIMEOUT,
-        CUSTOM
+        SUCCEEDED("SUCCEEDED"),
+        FAILED("FAILED"),
+        WORKING("WORKING"),
+        TIMEOUT("TIMEOUT"),
+        CUSTOM("CUSTOM");
+
+        private String enumString;
+        EJobStatus(String confName)
+        {
+            this.enumString = confName;
+        }
+
+        @Override
+        public String toString()
+        {
+            return enumString;
+        }
+
     }
 
     protected static boolean mAllowExternalIPs = false;
@@ -33,6 +47,7 @@ public class RESTServiceWebServer extends NanoHTTPD {
 
     public RESTServiceWebServer(int port, Context context) {
         super(port);
+        LogHelper.logD("RESTServiceWebServer::RESTServiceWebServer Creation on port: " + String.valueOf(port));
         mContext = context;
         SharedPreferences sharedpreferences = context.getSharedPreferences(RESTHostServiceConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         mAllowExternalIPs = sharedpreferences.getBoolean(RESTHostServiceConstants.SHARED_PREFERENCES_ALLOW_EXTERNAL_IPs, false);
@@ -43,8 +58,10 @@ public class RESTServiceWebServer extends NanoHTTPD {
     @Override
     public void start() throws IOException {
         super.start();
+        LogHelper.logD("RESTServiceWebServer::start");
         if(mIPChangeObserver == null)
         {
+            LogHelper.logD("RESTServiceWebServer::start: Creating IP Change Observer");
             // We launch the observer but we do not need to be notified here if the IP change
             mIPChangeObserver = new RESTHostServiceWifiStateObserver(mContext, new RESTHostServiceWifiStateObserver.IIPChangeObserver() {
                 @Override
@@ -69,11 +86,17 @@ public class RESTServiceWebServer extends NanoHTTPD {
                     }
                 }
             });
+            LogHelper.logD("RESTServiceWebServer::start: Starting IP Change Observer");
             mIPChangeObserver.startObserver();
         }
         else if(mIPChangeObserver.isStarted() == false)
         {
+            LogHelper.logD("RESTServiceWebServer::start: IP Change Observer already exists but not started. Starting it.");
             mIPChangeObserver.startObserver();
+        }
+        else
+        {
+            LogHelper.logD("RESTServiceWebServer::start: IP Change Observer already exists and is started.");
         }
         mStopServing = false;
     }
@@ -83,6 +106,7 @@ public class RESTServiceWebServer extends NanoHTTPD {
         mStopServing = true;
         if(mIPChangeObserver != null && mIPChangeObserver.isStarted())
         {
+            LogHelper.logD("RESTServiceWebServer::stop: Stopping IP Change Observer");
             mIPChangeObserver.stopObserver();
         }
         mIPChangeObserver = null;
@@ -91,9 +115,11 @@ public class RESTServiceWebServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
+        LogHelper.logD("RESTServiceWebServer::serve: Serving session: \n"+ session.toString());
         String responseJSON = "";
         if(mStopServing)
         {
+            LogHelper.logD("RESTServiceWebServer::serve: Stop serving is true, returning empty json string");
             // We are stopped, so we don't accept any requests from the webpage, and return an empty json string
             // Something happen and we did something, so the response will allways be OK from the serve method perspective
             // Other kind of responses (timeout, etc...) are managed by the REST server itself.
@@ -105,6 +131,7 @@ public class RESTServiceWebServer extends NanoHTTPD {
         // Check if the remote IP is equal to the device IP
         if(session.getRemoteHostName().equalsIgnoreCase("localhost") == false && session.getRemoteIpAddress().equalsIgnoreCase("127.0.0.1") == false && mAllowExternalIPs == false && session.getRemoteIpAddress().equalsIgnoreCase(mIPChangeObserver.getIPAddress()) == false)
         {
+            LogHelper.logE("RESTServiceWebServer::serve: Error, accessing the REST service from external IP has been blocked.");
             responseJSON= "{\n \"result\": \"error\",\n \"message\":\"Accessing REST service from external IP has been blocked. Only localhost call are permitted. Check configuration if you want to allow external IP addresses to call this web service.\"\n}";
         }
         else
@@ -116,6 +143,7 @@ public class RESTServiceWebServer extends NanoHTTPD {
             String path = "";
             try {
                 URI uri = new URI(session.getUri());
+                LogHelper.logV("RESTServiceWebServer::serve: URI: " + uri.toString());
                 String splitted[] = uri.getPath().split("/");
                 if(splitted.length > 1)
                 {
@@ -130,15 +158,18 @@ public class RESTServiceWebServer extends NanoHTTPD {
                 path = "";
                 e.printStackTrace();
             }
+            LogHelper.logV("RESTServiceWebServer::serve: Path: " + path);
 
             if(path.length() > 0)
             {
                 switch(path)
                 {
                     case "printconnect":
+                        LogHelper.logD("RESTServiceWebServer::serve: Serving PrintConnect call.");
                         processParamsReturned = mPrintEndPoint.processSession(session);
                         break;
                     case "datawedge":
+                        LogHelper.logD("RESTServiceWebServer::serve: Serving Datawedge call.");
                         processParamsReturned = mScanEndPoint.processSession(session);
                         break;
                     default:
@@ -150,32 +181,39 @@ public class RESTServiceWebServer extends NanoHTTPD {
                     switch(processParamsReturned.first)
                     {
                         case SUCCEEDED:
+                            LogHelper.logD("RESTServiceWebServer::serve: call returned Succeeded");
                             responseJSON= "{\n \"result\": \"succeeded\" \n}";
                             break;
                         case FAILED:
+                            LogHelper.logD("RESTServiceWebServer::serve: call returned Error: " + processParamsReturned.second);
                             responseJSON= "{\n \"result\": \"error\",\n \"message\":\"" + processParamsReturned.second + "\"\n}";
                             break;
                         case TIMEOUT:
+                            LogHelper.logD("RESTServiceWebServer::serve: call returned Timeout: " + processParamsReturned.second);
                             responseJSON= "{\n \"result\": \"timeout\",\n \"message\":\"" + processParamsReturned.second + "\"\n}";
                             break;
                         case CUSTOM:
+                            LogHelper.logD("RESTServiceWebServer::serve: call returned Custom message: " + processParamsReturned.second);
                             responseJSON = processParamsReturned.second;
                             break;
                     }
                 }
                 else
                 {
+                    LogHelper.logE("RESTServiceWebServer::serve: Error message path not recognized: " + path);
                     responseJSON= "{\n \"result\": \"error\",\n \"message\":\"Path:" + path + " not recognized.\"\n}";
                 }
             }
             else
             {
+                LogHelper.logE("RESTServiceWebServer::serve: Error path malformed: " + path);
                 responseJSON= "{\n \"result\": \"error\",\n \"message\":\"Path:" + path + " malformed.\"\n}";
             }
         }
         // Something happen and we did something, so the response will allways be OK from the serve method perspective
         // Other kind of responses (timeout, etc...) are managed by the REST server itself.
         Response resp =  newFixedLengthResponse(Response.Status.OK, "application/json", responseJSON);
+        LogHelper.logD("RESTServiceWebServer::serve: JSON Response: " + responseJSON);
 
         // We need to add CORS header to the response to allow Cross Origin Resource Sharing
         resp = addCORSHeaders(session.getHeaders(), resp, "*");

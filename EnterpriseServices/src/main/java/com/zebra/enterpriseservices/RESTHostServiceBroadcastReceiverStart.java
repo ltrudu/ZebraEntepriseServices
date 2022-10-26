@@ -9,7 +9,7 @@ public class RESTHostServiceBroadcastReceiverStart extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(RESTHostServiceConstants.TAG, "RESTHostServiceBroadcastReceiverStart::onReceive");
+        LogHelper.logD( "RESTHostServiceBroadcastReceiverStart::onReceive");
         // Start service
         RESTHostService.startService(context);
         RESTHostServiceActivity.updateGUISwitchesIfNecessary();

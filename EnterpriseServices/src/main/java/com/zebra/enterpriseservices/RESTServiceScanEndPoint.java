@@ -175,7 +175,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
     protected Pair<RESTServiceWebServer.EJobStatus, String> waitscan(Map<String, List<String>> paramsList) {
         if(mScanJobLatch != null)
         {
-            return new Pair<>(RESTServiceWebServer.EJobStatus.FAILED, "DataWedge Service: Error, a scanning job is already running in background. Please wait for it to finish or timeout. Or use the stopwaitingscan REST command to stop it.");
+            return new Pair<>(RESTServiceWebServer.EJobStatus.WORKING, "DataWedge Service: Error, a scanning job is already running in background. Please wait for it to finish or timeout. Or use the stopwaitingscan REST command to stop it.");
         }
 
         // We need to retrieve the time out parameter
@@ -225,9 +225,9 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
                             mScannedDataSource = source;
                             mScannedData = data;
                             mScannedDataSymbology = typology;
-                            if(mScanJobLatch != null && mScanJobLatch.getCount() > 0)
-                            {
-                                mScanJobLatch.countDown();
+                            if(mScanJobLatch != null) {
+                                while(mScanJobLatch.getCount() > 0)
+                                    mScanJobLatch.countDown();
                             }
                         }
                     }
@@ -261,17 +261,19 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
 
         try {
             mScanJobLatch.await();
-            mScanJobLatch = null;
-            if(mScannedDataSource.equalsIgnoreCase(STOP_SCANNER))
-            {
-                // Return an empty String
-                return new Pair<>(RESTServiceWebServer.EJobStatus.CUSTOM, "");
-            }
             // Remove Receiver
             if(mScanReceiver != null)
             {
                 mScanReceiver.stopReceive();
                 mScanReceiver = null;
+            }
+
+            mScanJobLatch = null;
+
+            if(mScannedDataSource.equalsIgnoreCase(STOP_SCANNER))
+            {
+                // Return an empty String
+                return new Pair<>(RESTServiceWebServer.EJobStatus.CUSTOM, "");
             }
 
             if(mScannedData != "") {
@@ -285,6 +287,13 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
             {
                 while(mScanJobLatch.getCount() > 0)
                     mScanJobLatch.countDown();
+
+                if(mScanReceiver != null)
+                {
+                    mScanReceiver.stopReceive();
+                    mScanReceiver = null;
+                }
+
                 mScanJobLatch = null;
             }
             return new Pair<>(RESTServiceWebServer.EJobStatus.FAILED, "Waiting Scanner: Exception while waiting for CountDownLatch : " + e.getMessage());
@@ -302,6 +311,7 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
         if(mScanReceiver != null)
         {
             mScanReceiver.stopReceive();
+            mScanReceiver = null;
         }
 
         mScannedDataSource = STOP_SCANNER;
@@ -315,6 +325,12 @@ public class RESTServiceScanEndPoint implements RESTServiceInterface{
             {
                 while(mScanJobLatch.getCount() > 0)
                     mScanJobLatch.countDown();
+                if(mScanReceiver != null)
+                {
+                    mScanReceiver.stopReceive();
+                    mScanReceiver = null;
+                }
+                mScanJobLatch = null;
             }
             return new Pair<>(RESTServiceWebServer.EJobStatus.FAILED, "Stop Waiting Scanner: Exception while terminating countdown latch : " + e.getMessage());
         }

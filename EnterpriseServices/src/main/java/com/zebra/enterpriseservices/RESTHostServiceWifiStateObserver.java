@@ -38,13 +38,13 @@ public class RESTHostServiceWifiStateObserver {
 
     public void startObserver()
     {
-        Log.d(RESTHostServiceConstants.TAG, "Starting ip change observer.");
+        LogHelper.logD( "Starting ip change observer.");
         registerNetworkChangeBroadcastReceiver();
     }
 
     public void stopObserver()
     {
-        Log.d(RESTHostServiceConstants.TAG, "Stopping ip change observer.");
+        LogHelper.logD( "Stopping ip change observer.");
         unregisterNetworkChangeBroadcastReceiver();
     }
 
@@ -80,7 +80,7 @@ public class RESTHostServiceWifiStateObserver {
         }
         else
         {
-            Log.d(RESTHostServiceConstants.TAG, "StartObserver: Warning, WifiIPObserver already running.");
+            LogHelper.logD( "StartObserver: Warning, WifiIPObserver already running.");
         }
         // get current ip if connected
         if(isConnected())
@@ -96,7 +96,7 @@ public class RESTHostServiceWifiStateObserver {
         }
         else
         {
-            Log.d(RESTHostServiceConstants.TAG, "StartObserver: Warning, WifiIPObserver already stopped.");
+            LogHelper.logD( "StartObserver: Warning, WifiIPObserver already stopped.");
         }
     }
 

@@ -36,6 +36,11 @@
 			display: inline-flex;
 			font: 400 35px Arial;
 		}
+		.textInput{
+		    height: 80px;
+			width: 380px;
+			font: 400 36px Arial;
+		}
 		.scaninput{
 		    height: 80px;
 			width: 380px;
@@ -69,6 +74,15 @@
 	</head>
 	<body>
 	<h1>Enterprise Services Playground</h1>
+			<div class="pageBlock">
+				<h2>Setup</h2>
+				<hr class="separator"></hr>
+				<input id="inputIP" name="inputIP" type="text" class="textInput" value="localhost">Enterprise Services Device IP</input>
+				<hr class="separator"></hr>
+				<input id="inputPrinterBTMac" name="inputPrinterBTMac" type="text" class="textInput" value="AC3FA4CE7931">Printer Bluetooth Mac address</input>
+				<hr class="separator"></hr>
+				<input id="inputPrinterBTWifi name="inputPrinterBTWifi type="text" class="textInput" value="AC3FA4CE7930">Printer Wifi Mac address</input>
+			</div>
 			<div class="pageBlock">
 				<h2>Print Rest Services</h2>
 				<hr class="separator"></hr>
@@ -115,12 +129,17 @@
 			</div>
 
 		<script>
-		var destIP = "localhost";//"127.0.0.1"; //"10.10.12.179";//"10.6.201.11";  // IP address of the device. This can be localhost or 127.0.0.1 if run locally.
+		var destIP = "192.168.1.49";//localhost";//"127.0.0.1"; //"10.10.12.179";//"10.6.201.11";  // IP address of the device. This can be localhost or 127.0.0.1 if run locally.
 		// destIP can be set to a remote IP if you want to test your web page code from a desktop computer
 		// in that case, you must enable the "allow external ip" option of the service
 
 		var printerBTMac = "AC3FA4CE7931";
 		var printerWIFIMac = "AC3FA4CE7930";
+		
+		function printerBTMac()
+		{
+			return document.getElementById("myText").value
+		}
 		
 
 		function connectToPrinterRestWsFetch()
@@ -170,12 +189,6 @@
 			
 			// Fetch first print job
 			// Standard charset is optional here because UTF_8 is the default decoding char set.
-			fetch("http://"+ destIP + ":8080/printconnect?command=printzpl&encoding=base64encoded&standardCharsets=UTF_8&template="+templateUTF8Base64+"&variables="+variableUTF8Base64)
-			.then(response => {	if(response.ok) return response.json();})
-			.then(json => document.getElementById("RestWSResponse").innerHTML = "<p>Status : " + json.result + "</p>\n<p>Message : " + json.message + "</p>\n");
-			
-			// Fetch a second print job
-			variableUTF8Base64 = base64.encode('%OBJECT%:The rain:%ADJECTIVE%:wet.');
 			fetch("http://"+ destIP + ":8080/printconnect?command=printzpl&encoding=base64encoded&standardCharsets=UTF_8&template="+templateUTF8Base64+"&variables="+variableUTF8Base64)
 			.then(response => {	if(response.ok) return response.json();})
 			.then(json => document.getElementById("RestWSResponse").innerHTML = "<p>Status : " + json.result + "</p>\n<p>Message : " + json.message + "</p>\n");			
@@ -239,15 +252,33 @@
 			shouldContinueListening = true;
 			var xhr = new XMLHttpRequest();
 			var url = "http://"+ destIP + ":8080/datawedge?command=waitscan&timeout=15000";
-			xhr.open("GET", url);
-						xhr.onreadystatechange = function (oEvent) {  
-				if (xhr.readyState === XMLHttpRequest.DONE) {  
-					  console.log(xhr.responseText);
-					  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
-					  if(shouldContinueListening == true)
-						startListeningToScans();
-				}  
-			}; 
+			xhr.open("GET", url, false);
+			//xhr.timeout = 16000; // time in milliseconds
+			//xhr.onreadystatechange = function (oEvent) { 
+			//		  console.log(xhr.responseText);
+			//		  console.log(xhr.readyState);
+			//	if (xhr.readyState === XMLHttpRequest.DONE) {  
+			//			console.log("ReadyState DONE");
+			//		  console.log(xhr.responseText);
+			//		  document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+			//		  if(shouldContinueListening == true)
+			//			startListeningToScans();
+			//	}  
+			//}; 
+			
+			xhr.onload = () => {
+				console.log(xhr.responseText);
+				console.log(xhr.readyState);
+				document.getElementById("RestWSResponse").innerHTML = "<p>" + xhr.responseText + "</p>\n";	
+				if(shouldContinueListening == true)
+					startListeningToScans();
+			};
+			
+			xhr.ontimeout = (e) => {
+				document.getElementById("RestWSResponse").innerHTML = "<p>" + "Scan Wait XMLHttpRequest timed out." + "</p>\n";	
+				if(shouldContinueListening == true)
+					startListeningToScans();
+			};
 			xhr.send(null);
 		}
 		
