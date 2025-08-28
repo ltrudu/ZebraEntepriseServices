@@ -10,8 +10,8 @@
 		"bdf_suffix": null
 	},
 	"IntentPlugin": {
-		"intent_action": "com.symbol.datacapturereceiver.RECVR",
-		"intent_category": "android.intent.category.DEFAULT",
+		"intent_action": null,
+		"intent_category": null,
 		"intent_delivery": "BROADCAST",
 		"intent_output_enabled": true
 	},
